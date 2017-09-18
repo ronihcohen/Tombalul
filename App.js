@@ -17,7 +17,6 @@ async function playSound(file) {
   }
 }
 
-const correct = require("./assets/sounds/correct.m4a");
 const wrong = require("./assets/sounds/wrong.m4a");
 
 const answers = [
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   hiddenimages: {
-    opacity: 0.5
+    opacity: 0
   }
 });
 
@@ -64,6 +63,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      correctAnswer: null,
       level: 0,
       wrongAnswers: [],
       list: [
@@ -72,8 +72,8 @@ export default class App extends React.Component {
           title: "Bird"
         },
         {
-          images: require("./assets/images/cat.jpg"),
-          title: "Cat"
+          images: require("./assets/images/horse.jpg"),
+          title: "Horse"
         },
         {
           images: require("./assets/images/dog.jpg"),
@@ -88,20 +88,20 @@ export default class App extends React.Component {
           title: "Cat"
         },
         {
-          images: require("./assets/images/dog.jpg"),
-          title: "Dog"
+          images: require("./assets/images/mouse.jpg"),
+          title: "Mouse"
         },
         {
           images: require("./assets/images/bird.jpg"),
           title: "Bird"
         },
         {
-          images: require("./assets/images/cat.jpg"),
-          title: "Cat"
+          images: require("./assets/images/monkey.jpg"),
+          title: "Monkey"
         },
         {
-          images: require("./assets/images/dog.jpg"),
-          title: "Dog"
+          images: require("./assets/images/lion.jpg"),
+          title: "Lion"
         }
       ]
     };
@@ -110,44 +110,60 @@ export default class App extends React.Component {
     setTimeout(() => playSound(answers[this.state.level].sound), 100);
   }
   render() {
+    const levelStart = this.state.level * 3;
     return (
       <View style={styles.container}>
         <View style={styles.imagesContainer}>
           {this.state.list
             .filter(
-              (item, index) =>
-                index >= this.state.level && index < this.state.level + 3
+              (item, index) => index >= levelStart && index < levelStart + 3
             )
-            .map(item => (
-              <TouchableHighlight
-                style={
-                  this.state.wrongAnswers.find(
-                    title => title === item.title
-                  ) ? (
-                    styles.hiddenimages
-                  ) : (
-                    styles.TouchableHighlight
-                  )
-                }
-                onPress={() => {
-                  if (item.title === answers[this.state.level].title) {
-                    let nextLevel = this.state.level + 1;
-                    if (!answers[nextLevel]) {
-                      nextLevel = 0;
-                    }
-                    this.setState({ level: nextLevel, wrongAnswers: [] });
-                    playSound(answers[nextLevel].sound);
-                  } else {
-                    playSound(wrong);
-                    let wrongAnswers = this.state.wrongAnswers;
-                    wrongAnswers.push(item.title);
-                    this.setState({ wrongAnswers: wrongAnswers });
+            .map(item => {
+              return !this.state.correctAnswer ||
+              this.state.correctAnswer === item.title ? (
+                <TouchableHighlight
+                  key={item.title}
+                  style={
+                    this.state.wrongAnswers.find(
+                      title => title === item.title
+                    ) ? (
+                      styles.hiddenimages
+                    ) : (
+                      styles.TouchableHighlight
+                    )
                   }
-                }}
-              >
-                <Image source={item.images} style={styles.images} />
-              </TouchableHighlight>
-            ))}
+                  onPress={() => {
+                    if (this.state.correctAnswer) {
+                      return;
+                    }
+                    if (item.title === answers[this.state.level].title) {
+                      playSound(answers[this.state.level].sound);
+                      this.setState({ correctAnswer: item.title });
+
+                      setTimeout(() => {
+                        let nextLevel = this.state.level + 1;
+                        if (!answers[nextLevel]) {
+                          nextLevel = 0;
+                        }
+                        this.setState({
+                          level: nextLevel,
+                          wrongAnswers: [],
+                          correctAnswer: null
+                        });
+                        playSound(answers[nextLevel].sound);
+                      }, 3000);
+                    } else {
+                      playSound(wrong);
+                      let wrongAnswers = this.state.wrongAnswers;
+                      wrongAnswers.push(item.title);
+                      this.setState({ wrongAnswers: wrongAnswers });
+                    }
+                  }}
+                >
+                  <Image source={item.images} style={styles.images} />
+                </TouchableHighlight>
+              ) : null;
+            })}
         </View>
         <Text style={styles.title}> {answers[this.state.level].title} </Text>
       </View>
