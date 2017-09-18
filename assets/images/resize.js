@@ -15,7 +15,7 @@ function readFiles(dirname, onError) {
         }
         console.log(filename);
         sharp(content)
-          .resize(320, 240)
+          .resize(150, 150)
           .toFile(filename, (err, info) => console.log(err, info));
       });
     });

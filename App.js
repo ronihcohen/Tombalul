@@ -18,6 +18,7 @@ async function playSound(file) {
 }
 
 const wrong = require("./assets/sounds/wrong.m4a");
+const correct = require("./assets/sounds/correct.m4a");
 
 const answers = [
   {
@@ -31,6 +32,30 @@ const answers = [
   {
     title: "Bird",
     sound: require("./assets/sounds/bird.m4a")
+  },
+  {
+    title: "Monkey",
+    sound: require("./assets/sounds/monkey.m4a")
+  },
+  {
+    title: "Elephant",
+    sound: require("./assets/sounds/elephant.m4a")
+  },
+  {
+    title: "Rabbit",
+    sound: require("./assets/sounds/rabbit.m4a")
+  },
+  {
+    title: "Horse",
+    sound: require("./assets/sounds/horse.m4a")
+  },
+  {
+    title: "Mouse",
+    sound: require("./assets/sounds/mouse.m4a")
+  },
+  {
+    title: "Lion",
+    sound: require("./assets/sounds/lion.m4a")
   }
 ];
 
@@ -102,6 +127,78 @@ export default class App extends React.Component {
         {
           images: require("./assets/images/lion.jpg"),
           title: "Lion"
+        },
+        {
+          images: require("./assets/images/mouse.jpg"),
+          title: "Mouse"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/monkey.jpg"),
+          title: "Monkey"
+        },
+        {
+          images: require("./assets/images/dog.jpg"),
+          title: "Dog"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/elephant.jpg"),
+          title: "Elephant"
+        },
+        {
+          images: require("./assets/images/monkey.jpg"),
+          title: "Monkey"
+        },
+        {
+          images: require("./assets/images/rabbit.jpg"),
+          title: "Rabbit"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/horse.jpg"),
+          title: "Horse"
+        },
+        {
+          images: require("./assets/images/dog.jpg"),
+          title: "Dog"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/cat.jpg"),
+          title: "Cat"
+        },
+        {
+          images: require("./assets/images/mouse.jpg"),
+          title: "Mouse"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/bird.jpg"),
+          title: "Bird"
+        },
+        {
+          images: require("./assets/images/monkey.jpg"),
+          title: "Monkey"
+        },
+        {
+          images: require("./assets/images/lion.jpg"),
+          title: "Lion"
         }
       ]
     };
@@ -137,7 +234,11 @@ export default class App extends React.Component {
                       return;
                     }
                     if (item.title === answers[this.state.level].title) {
-                      playSound(answers[this.state.level].sound);
+                      playSound(correct);
+                      setTimeout(
+                        () => playSound(answers[this.state.level].sound),
+                        700
+                      );
                       this.setState({ correctAnswer: item.title });
 
                       setTimeout(() => {
@@ -150,8 +251,11 @@ export default class App extends React.Component {
                           wrongAnswers: [],
                           correctAnswer: null
                         });
-                        playSound(answers[nextLevel].sound);
-                      }, 3000);
+                        setTimeout(
+                          () => playSound(answers[nextLevel].sound),
+                          500
+                        );
+                      }, 2500);
                     } else {
                       playSound(wrong);
                       let wrongAnswers = this.state.wrongAnswers;
