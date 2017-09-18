@@ -71,8 +71,6 @@ const styles = StyleSheet.create({
     margin: 20
   },
   images: {
-    width: 200,
-    height: 200,
     margin: 10
   },
   title: {
