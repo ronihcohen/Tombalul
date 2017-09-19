@@ -1,6 +1,12 @@
 {
   "expo": {
     "sdkVersion": "20.0.0",
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "ios": {
+      "bundleIdentifier": "com.hacohen.roni"
+    },
+    "android": {
+      "package": "com.hacohen.roni"
+    }
   }
 }

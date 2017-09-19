@@ -20,45 +20,6 @@ async function playSound(file) {
 const wrong = require("./assets/sounds/wrong.m4a");
 const correct = require("./assets/sounds/correct.m4a");
 
-const answers = [
-  {
-    title: "Dog",
-    sound: require("./assets/sounds/dog.m4a")
-  },
-  {
-    title: "Cat",
-    sound: require("./assets/sounds/cat.m4a")
-  },
-  {
-    title: "Bird",
-    sound: require("./assets/sounds/bird.m4a")
-  },
-  {
-    title: "Monkey",
-    sound: require("./assets/sounds/monkey.m4a")
-  },
-  {
-    title: "Elephant",
-    sound: require("./assets/sounds/elephant.m4a")
-  },
-  {
-    title: "Rabbit",
-    sound: require("./assets/sounds/rabbit.m4a")
-  },
-  {
-    title: "Horse",
-    sound: require("./assets/sounds/horse.m4a")
-  },
-  {
-    title: "Mouse",
-    sound: require("./assets/sounds/mouse.m4a")
-  },
-  {
-    title: "Lion",
-    sound: require("./assets/sounds/lion.m4a")
-  }
-];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -70,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     margin: 20
   },
-  images: {
+  image: {
     margin: 10
   },
   title: {
@@ -89,127 +50,22 @@ export default class App extends React.Component {
       correctAnswer: null,
       level: 0,
       wrongAnswers: [],
-      list: [
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/horse.jpg"),
-          title: "Horse"
-        },
-        {
-          images: require("./assets/images/dog.jpg"),
-          title: "Dog"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/cat.jpg"),
-          title: "Cat"
-        },
-        {
-          images: require("./assets/images/mouse.jpg"),
-          title: "Mouse"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/monkey.jpg"),
-          title: "Monkey"
-        },
-        {
-          images: require("./assets/images/lion.jpg"),
-          title: "Lion"
-        },
-        {
-          images: require("./assets/images/mouse.jpg"),
-          title: "Mouse"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/monkey.jpg"),
-          title: "Monkey"
-        },
-        {
-          images: require("./assets/images/dog.jpg"),
-          title: "Dog"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/elephant.jpg"),
-          title: "Elephant"
-        },
-        {
-          images: require("./assets/images/monkey.jpg"),
-          title: "Monkey"
-        },
-        {
-          images: require("./assets/images/rabbit.jpg"),
-          title: "Rabbit"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/horse.jpg"),
-          title: "Horse"
-        },
-        {
-          images: require("./assets/images/dog.jpg"),
-          title: "Dog"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/cat.jpg"),
-          title: "Cat"
-        },
-        {
-          images: require("./assets/images/mouse.jpg"),
-          title: "Mouse"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/bird.jpg"),
-          title: "Bird"
-        },
-        {
-          images: require("./assets/images/monkey.jpg"),
-          title: "Monkey"
-        },
-        {
-          images: require("./assets/images/lion.jpg"),
-          title: "Lion"
-        }
-      ]
+      options: require("./options.js").default,
+      answers: require("./answers.js").default
     };
   }
   componentDidMount() {
-    setTimeout(() => playSound(answers[this.state.level].sound), 100);
+    setTimeout(
+      () => playSound(this.state.answers[this.state.level].sound),
+      100
+    );
   }
   render() {
     const levelStart = this.state.level * 3;
     return (
       <View style={styles.container}>
         <View style={styles.imagesContainer}>
-          {this.state.list
+          {this.state.options
             .filter(
               (item, index) => index >= levelStart && index < levelStart + 3
             )
@@ -231,17 +87,20 @@ export default class App extends React.Component {
                     if (this.state.correctAnswer) {
                       return;
                     }
-                    if (item.title === answers[this.state.level].title) {
+                    if (
+                      item.title === this.state.answers[this.state.level].title
+                    ) {
                       playSound(correct);
                       setTimeout(
-                        () => playSound(answers[this.state.level].sound),
+                        () =>
+                          playSound(this.state.answers[this.state.level].sound),
                         700
                       );
                       this.setState({ correctAnswer: item.title });
 
                       setTimeout(() => {
                         let nextLevel = this.state.level + 1;
-                        if (!answers[nextLevel]) {
+                        if (!this.state.answers[nextLevel]) {
                           nextLevel = 0;
                         }
                         this.setState({
@@ -250,7 +109,7 @@ export default class App extends React.Component {
                           correctAnswer: null
                         });
                         setTimeout(
-                          () => playSound(answers[nextLevel].sound),
+                          () => playSound(this.state.answers[nextLevel].sound),
                           500
                         );
                       }, 2500);
@@ -262,12 +121,15 @@ export default class App extends React.Component {
                     }
                   }}
                 >
-                  <Image source={item.images} style={styles.images} />
+                  <Image source={item.image} style={styles.image} />
                 </TouchableHighlight>
               ) : null;
             })}
         </View>
-        <Text style={styles.title}> {answers[this.state.level].title} </Text>
+        <Text style={styles.title}>
+          {" "}
+          {this.state.answers[this.state.level].title}{" "}
+        </Text>
       </View>
     );
   }

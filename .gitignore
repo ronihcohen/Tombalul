@@ -1,7 +1,4 @@
 node_modules/
 .expo/
 npm-debug.*
-assets/.DS_Store
-assets/images/.DS_Store
-.DS_Store
-.DS_Store
+**/.DS_Store
