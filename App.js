@@ -60,6 +60,28 @@ export default class App extends React.Component {
       100
     );
   }
+  correctAnswerPressed(item) {
+    playSound(correct);
+    setTimeout(
+      () => playSound(this.state.answers[this.state.level].sound),
+      700
+    );
+    this.setState({ correctAnswer: item.title });
+
+    setTimeout(() => {
+      let nextLevel = this.state.level + 1;
+      if (!this.state.answers[nextLevel]) {
+        nextLevel = 0;
+      }
+      this.setState({
+        level: nextLevel,
+        wrongAnswers: [],
+        correctAnswer: null
+      });
+      setTimeout(() => playSound(this.state.answers[nextLevel].sound), 500);
+    }, 2500);
+  }
+
   render() {
     const levelStart = this.state.level * 3;
     return (
@@ -90,29 +112,7 @@ export default class App extends React.Component {
                     if (
                       item.title === this.state.answers[this.state.level].title
                     ) {
-                      playSound(correct);
-                      setTimeout(
-                        () =>
-                          playSound(this.state.answers[this.state.level].sound),
-                        700
-                      );
-                      this.setState({ correctAnswer: item.title });
-
-                      setTimeout(() => {
-                        let nextLevel = this.state.level + 1;
-                        if (!this.state.answers[nextLevel]) {
-                          nextLevel = 0;
-                        }
-                        this.setState({
-                          level: nextLevel,
-                          wrongAnswers: [],
-                          correctAnswer: null
-                        });
-                        setTimeout(
-                          () => playSound(this.state.answers[nextLevel].sound),
-                          500
-                        );
-                      }, 2500);
+                      this.correctAnswerPressed(item);
                     } else {
                       playSound(wrong);
                       let wrongAnswers = this.state.wrongAnswers;
@@ -127,8 +127,7 @@ export default class App extends React.Component {
             })}
         </View>
         <Text style={styles.title}>
-          {" "}
-          {this.state.answers[this.state.level].title}{" "}
+          {this.state.answers[this.state.level].title}
         </Text>
       </View>
     );
