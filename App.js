@@ -50,8 +50,8 @@ export default class App extends React.Component {
       correctAnswer: null,
       level: 0,
       wrongAnswers: [],
-      options: require("./options.js").default,
-      answers: require("./answers.js").default
+      answers: require("./answers.js").default,
+      currentOptions: null
     };
   }
   componentDidMount() {
@@ -76,55 +76,75 @@ export default class App extends React.Component {
       this.setState({
         level: nextLevel,
         wrongAnswers: [],
-        correctAnswer: null
+        correctAnswer: null,
+        currentOptions: null
       });
       setTimeout(() => playSound(this.state.answers[nextLevel].sound), 500);
     }, 2500);
   }
 
+  shuffle(a) {
+    for (let i = a.length; i; i--) {
+      let j = Math.floor(Math.random() * i);
+      [a[i - 1], a[j]] = [a[j], a[i - 1]];
+    }
+    return a;
+  }
+
+  getOptions = function(currentAnswer) {
+    let options = [currentAnswer];
+    let answers = [...this.state.answers];
+    this.shuffle(answers).forEach(answer => {
+      if (options.length < 3 && answer !== currentAnswer) {
+        options.push(answer);
+      }
+    });
+    return this.shuffle(options);
+  };
+
   render() {
-    const levelStart = this.state.level * 3;
+    let currentAnswer = this.state.answers[this.state.level];
+    let options = this.state.currentOptions || this.getOptions(currentAnswer);
     return (
       <View style={styles.container}>
         <View style={styles.imagesContainer}>
-          {this.state.options
-            .filter(
-              (item, index) => index >= levelStart && index < levelStart + 3
-            )
-            .map(item => {
-              return !this.state.correctAnswer ||
-              this.state.correctAnswer === item.title ? (
-                <TouchableHighlight
-                  key={item.title}
-                  style={
-                    this.state.wrongAnswers.find(
-                      title => title === item.title
-                    ) ? (
-                      styles.hiddenimages
-                    ) : (
-                      styles.TouchableHighlight
-                    )
+          {options.map(item => {
+            return !this.state.correctAnswer ||
+            this.state.correctAnswer === item.title ? (
+              <TouchableHighlight
+                key={item.title}
+                style={
+                  this.state.wrongAnswers.find(
+                    title => title === item.title
+                  ) ? (
+                    styles.hiddenimages
+                  ) : (
+                    styles.TouchableHighlight
+                  )
+                }
+                onPress={() => {
+                  if (this.state.correctAnswer) {
+                    return;
                   }
-                  onPress={() => {
-                    if (this.state.correctAnswer) {
-                      return;
-                    }
-                    if (
-                      item.title === this.state.answers[this.state.level].title
-                    ) {
-                      this.correctAnswerPressed(item);
-                    } else {
-                      playSound(wrong);
-                      let wrongAnswers = this.state.wrongAnswers;
-                      wrongAnswers.push(item.title);
-                      this.setState({ wrongAnswers: wrongAnswers });
-                    }
-                  }}
-                >
-                  <Image source={item.image} style={styles.image} />
-                </TouchableHighlight>
-              ) : null;
-            })}
+                  if (
+                    item.title === this.state.answers[this.state.level].title
+                  ) {
+                    this.correctAnswerPressed(item);
+                  } else {
+                    playSound(wrong);
+                    let wrongAnswers = this.state.wrongAnswers;
+                    wrongAnswers.push(item.title);
+                    this.setState({
+                      wrongAnswers: wrongAnswers,
+                      currentOptions: options
+                    });
+                  }
+                }}
+              >
+                <Image source={item.image} style={styles.image} />
+              </TouchableHighlight>
+            ) : null;
+          })}
         </View>
         <Text style={styles.title}>
           {this.state.answers[this.state.level].title}
