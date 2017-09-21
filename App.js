@@ -11,29 +11,34 @@ import {
 const wrong = require("./assets/sounds/wrong.m4a");
 const correct = require("./assets/sounds/correct.m4a");
 const hebrew = require("./hebrew.json");
-const { height, width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    margin: 10
   },
   imagesContainer: {
     flexDirection: "row",
-    margin: 20
+    flex: 10
   },
   image: {
     margin: 10,
-    width: width / 3 - 20,
-    height: height / 2
+    width: null
+  },
+  touchableHighlight: {
+    flex: 1
   },
   title: {
     fontSize: 35,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    flex: 1
   },
-  hiddenimages: {
-    opacity: 0
+  hiddenTouchableHighlight: {
+    opacity: 0,
+    flex: 1
   }
 });
 
@@ -111,6 +116,9 @@ export default class App extends React.Component {
     let options = this.state.currentOptions || this.getOptions(currentAnswer);
     return (
       <View style={styles.container}>
+        <Text style={styles.title}>
+          {hebrew[this.state.answers[this.state.level].title]}
+        </Text>
         <View style={styles.imagesContainer}>
           {options.map(item => {
             return !this.state.correctAnswer ||
@@ -121,9 +129,9 @@ export default class App extends React.Component {
                   this.state.wrongAnswers.find(
                     title => title === item.title
                   ) ? (
-                    styles.hiddenimages
+                    styles.hiddenTouchableHighlight
                   ) : (
-                    styles.TouchableHighlight
+                    styles.touchableHighlight
                   )
                 }
                 onPress={() => {
@@ -145,14 +153,15 @@ export default class App extends React.Component {
                   }
                 }}
               >
-                <Image source={item.image} style={styles.image} />
+                <Image
+                  source={item.image}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
               </TouchableHighlight>
             ) : null;
           })}
         </View>
-        <Text style={styles.title}>
-          {hebrew[this.state.answers[this.state.level].title]}
-        </Text>
       </View>
     );
   }
