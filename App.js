@@ -7,19 +7,9 @@ import {
   TouchableHighlight
 } from "react-native";
 
-async function playSound(file) {
-  const soundObject = new Expo.Audio.Sound();
-  try {
-    await soundObject.loadAsync(file);
-    await soundObject.playAsync();
-  } catch (error) {
-    console.warn("Can't play sound ", error);
-  }
-}
-
 const wrong = require("./assets/sounds/wrong.m4a");
 const correct = require("./assets/sounds/correct.m4a");
-
+const hebrew = require("./hebrew.json");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -42,6 +32,16 @@ const styles = StyleSheet.create({
     opacity: 0
   }
 });
+
+async function playSound(file) {
+  const soundObject = new Expo.Audio.Sound();
+  try {
+    await soundObject.loadAsync(file);
+    await soundObject.playAsync();
+  } catch (error) {
+    console.warn("Can't play sound ", error);
+  }
+}
 
 export default class App extends React.Component {
   constructor(props) {
@@ -147,7 +147,7 @@ export default class App extends React.Component {
           })}
         </View>
         <Text style={styles.title}>
-          {this.state.answers[this.state.level].title}
+          {hebrew[this.state.answers[this.state.level].title]}
         </Text>
       </View>
     );
