@@ -48,7 +48,7 @@ function readFiles(dirname, onError) {
         }
         console.log(`${name} was added.`);
         sharp(content)
-          .resize(150, 150)
+          .resize(300, 300)
           .toFile(filename, (err, info) => {
             if (err) console.log(err);
           });

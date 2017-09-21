@@ -4,12 +4,14 @@ import {
   Text,
   View,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from "react-native";
 
 const wrong = require("./assets/sounds/wrong.m4a");
 const correct = require("./assets/sounds/correct.m4a");
 const hebrew = require("./hebrew.json");
+const { height, width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -22,7 +24,9 @@ const styles = StyleSheet.create({
     margin: 20
   },
   image: {
-    margin: 10
+    margin: 10,
+    width: width / 3 - 20,
+    height: height / 2
   },
   title: {
     fontSize: 35,
